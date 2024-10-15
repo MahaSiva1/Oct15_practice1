@@ -1,0 +1,117 @@
+---
+title: "Leprosy Report"
+author: "Maha Siva"
+date: "2024-09-19"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE, message=FALSE)
+
+```
+
+# Dataset information 
+
+The **Homework2_leprosy.csv** contains data values pertaining to the number of new cases of leprosy in 2022, population, GDP (billions of US $), land area and the region 
+
+```{r, echo = FALSE}
+
+lep <- read.csv('Homework2_leprosy.csv')
+
+```
+# Question 1 
+
+Which country had the highest number of new leprosy cases in 2022? Why is it not a fair comparison to look at the raw number of cases when comparing prevalence of the disease across different countries?
+
+```{r, echo=FALSE}
+
+lep[which(lep$New_Cases==max(lep$New_Cases, na.rm=TRUE)),]
+
+```
+
+India has the highest number of cases. It is not accurate to look at just the raw number of condition because country could just have more population. 
+
+## Question 2 
+Create a new variable in the dataset that provides the leprosy cases per 100K people in each country. Graph this new variable’s distribution and provide the relevant summary statistics inline within a short paragraph describing the distribution.
+
+```{r}
+lep$casesPer100 <- (lep$New_Cases / lep$Population * 100000) 
+library(ggplot2)
+lep_ggplot <- ggplot(lep)
+
+lep_ggplot + geom_histogram(aes(x=casesPer100 )) + labs(x= "Cases per 100K", y= "Frequency", title="Distribution of Cases per 100K") 
+
+
+
+```
+
+
+
+The distribution of Cases per 100K is mainly skewed to the right with some outliers present. The median of Cases per 100K is `r round(median(lep$casesPer100, na.rm = TRUE),2)`.
+
+
+The first 1st quartile is `r quantile(lep$casesPer100, na.rm = TRUE) ["25%"]` and the second quartile is `r round(quantile(lep$casesPer100, na.rm = TRUE),2) ["75%"]` and lastly the IQR is `r round(IQR(lep$casesPer100, na.rm = TRUE),2)`. 
+
+## Question 3
+We want to compare cases per 100K across the different regions in this dataset.  In a single plot output, create a graph that shows the distribution of cases per 100K split by region. Output a nicely formatted table that provides the region name, number of countries in that region, and the median cases per 100K for each region.  Include a short paragraph summarizing differences in leprosy prevalence across regions.
+
+```{r}
+
+
+library(dplyr)
+library(readr)
+
+lep_ggplot + geom_boxplot(aes(x=casesPer100, y=Region))
+
+```
+
+```{r, echo=FALSE}
+
+new_lep <- lep %>%
+  group_by(Region) %>%
+  summarise(
+    num_countries = n(),
+    median_cases = median(casesPer100, na.rm=TRUE)
+  )
+new_lep
+
+```
+
+The following table displays a summary of leprosy cases in prospective of the different world regions. The table also displays the number of cases as well as the number of countries within each region.
+
+The graphs all show a right skew with a higher frequency in the low number of cases. According to the graph and the table, Africa has the highest median of leprosy cases, followed by Asia/pacific, then the Americas, then the Middle East, with Europe having the lowest median of leprosy cases. 
+
+
+
+## Question 4 
+Investigate the relationship between cases per 100K and one of the other variables in the dataset (other than region) by making the appropriate bivariate graph and providing the relevant summary statistic inline within a short paragraph describing the relationship.
+
+The correlation coefficient between cases per 100K is `r round(cor(lep$casesPer100, lep$GDP_billions, use="complete.obs"),2) ` which indicates a very weak association between these two variables.  
+
+
+
+```{r}
+
+lep_ggplot + geom_point(aes(x=casesPer100, y=GDP_billions, color=GDP_billions)) + labs(x="Cases per 100K", y = "GDP (Billions)", title = "Relationship Between Cases and GDP") + coord_cartesian(ylim=c(-0,1000)) 
+
+```
+
+The scatterplot of GDP and cases also illustrates a no-association type relationship with no positive or negative skew but has a lot of clustering around the origin. 
+
+## Question 5 
+The new cases of Leprosy seem to be the most prevalent in the regions of Africa and America. This contrasts to the country which had the most new cases being India (an Asian country). However, the amount of cases per 100K are are not correlated with GDP. I investigated the GDP as I thought the more affluent the country the more they can spend on healthcare to combat leprosy but that does not seem to be the case. To learn more about Leprosy click [here](https://leprosyhistory.org/).
+
+
+
+
+
+
+
+
+
+
+
+
