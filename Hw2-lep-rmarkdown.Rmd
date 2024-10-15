@@ -35,7 +35,7 @@ lep[which(lep$New_Cases==max(lep$New_Cases, na.rm=TRUE)),]
 India has the highest number of cases. It is not accurate to look at just the raw number of condition because country could just have more population. 
 
 ## Question 2 
-Create a new variable in the dataset that provides the leprosy cases per 100K people in each country. Graph this new variable’s distribution and provide the relevant summary statistics inline within a short paragraph describing the distribution.
+Create a new variable in the dataset that provides the leprosy cases per 100K people in each country. Graph this new variable’s distribution and provide the relevant summary statistics inline within a short paragraph describing the distribution. Make sure your graph looks neat and readable 
 
 ```{r}
 lep$casesPer100 <- (lep$New_Cases / lep$Population * 100000) 
