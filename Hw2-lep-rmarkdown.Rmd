@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(warning = FALSE, message=FALSE)
 
 ```
-
+I LOCE MAHA 
 # Dataset information 
 
 The **Homework2_leprosy.csv** contains data values pertaining to the number of new cases of leprosy in 2022, population, GDP (billions of US $), land area and the region 
